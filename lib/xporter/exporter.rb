@@ -1,3 +1,5 @@
+require "xporter/exporter/dsl"
+
 module Xporter
   class Exporter
     class_attribute :_columns, instance_accessor: false
@@ -12,6 +14,8 @@ module Xporter
     self._decorator_class = nil
     self._batch_size = 500.freeze
 
+    include DSL
+
     # class methods
     class << self
       def inherited(other) # reset so that each subclass has it's own collection
@@ -24,36 +28,6 @@ module Xporter
 
       def generate(*args)
         new.generate(*args)
-      end
-
-      private
-
-      def column(attribute_name, title = nil, &block)
-        self._columns << Column.new(attribute_name, title, &block)
-      end
-
-      def decorates(boolean_or_class)
-        if boolean_or_class.nil? || boolean_or_class == false
-          self._decorates = false
-          self._decorator_class = nil
-          return
-        end
-
-        self._decorates = true
-
-        if boolean_or_class.is_a?(Class)
-          self._decorator_class = boolean_or_class
-        end
-      end
-
-      def model(resource_class)
-        self._resource_class = resource_class
-      end
-
-      def transform(&block)
-        raise 'Block must accept two arguments' unless block.arity == 2
-
-        self._record_transform = block
       end
     end
 

@@ -20,6 +20,22 @@ RSpec.describe Xporter::Exporter do
     end
   end
 
+  describe 'DSL' do
+    subject do
+      Class.new(Xporter::Exporter)
+    end
+
+    describe '.column' do
+      it 'adds the column' do
+        expect do
+          subject.class_eval do
+            column(:name)
+          end
+        end.to change { subject._columns.count }.by(1)
+      end
+    end
+  end
+
   describe '.generate' do
     subject { exporter.generate(collection) }
 
