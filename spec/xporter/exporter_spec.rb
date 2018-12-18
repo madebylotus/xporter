@@ -35,6 +35,18 @@ RSpec.describe Xporter::Exporter do
       end
     end
 
+    describe '.model' do
+      let(:resource_class) { Class }
+
+      it 'stores the resource class' do
+        expect do
+          subject.class_eval do
+            model Class
+          end
+        end.to change { subject._resource_class }.from(nil).to(resource_class)
+      end
+    end
+
     describe '.transform' do
       it 'stores the transformation block' do
         expect do
