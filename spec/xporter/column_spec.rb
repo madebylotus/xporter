@@ -27,4 +27,47 @@ RSpec.describe Xporter::Column do
       subject.data(model)
     end
   end
+
+  describe '.title_from' do
+    let(:resource_class) do
+      Class.new do
+      end
+    end
+
+    context 'when title provided' do
+      subject { described_class.new(:author, 'Authored by') }
+
+      it 'returns the custom title' do
+        expect(title).to eq('Authored by')
+      end
+    end
+
+    context 'when fallback to attribute name' do
+      subject { described_class.new(:author) }
+
+      it 'falls back to the attribute name' do
+        expect(title).to eq('Author')
+      end
+    end
+
+    context 'when I18n available' do
+      subject { described_class.new(:author) }
+
+      let(:resource_class) do
+        Class.new do
+          def self.human_attribute_name(attribute_name)
+            attribute_name.upcase
+          end
+        end
+      end
+
+      it 'returns the humanized name' do
+        expect(title).to eq(:AUTHOR)
+      end
+    end
+
+    def title
+      subject.title_from(resource_class)
+    end
+  end
 end
