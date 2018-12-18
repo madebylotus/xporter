@@ -17,12 +17,6 @@ module Xporter
         def model(resource_class)
           self._resource_class = resource_class
         end
-
-        def transform(&block)
-          raise 'Block must accept two arguments' unless block.arity == 2
-
-          self._record_transform = block
-        end
       end
     end
   end

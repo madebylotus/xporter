@@ -34,6 +34,29 @@ RSpec.describe Xporter::Exporter do
         end.to change { subject._columns.count }.by(1)
       end
     end
+
+    describe '.transform' do
+      it 'stores the transformation block' do
+        expect do
+          subject.class_eval do
+            transform do |record, context|
+              record.object_id
+            end
+          end
+        end.to change { subject._record_transform }.from(nil)
+      end
+
+      it 'uses the return value of the tranform' do
+        subject.class_eval do
+          transform do |record, context|
+            record.object_id
+          end
+        end
+
+        exporter = subject.new
+        expect(exporter.send(:transform, justin_t)).to eq(justin_t.object_id)
+      end
+    end
   end
 
   describe '.generate' do
