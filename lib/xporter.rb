@@ -17,6 +17,10 @@ require "xporter/version"
 require "xporter/column"
 require "xporter/exporter"
 
+if defined?(ActionController)
+  require "xporter/file_streamer"
+end
+
 module Xporter
   class Error < StandardError; end
   # Your code goes here...
