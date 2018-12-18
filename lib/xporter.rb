@@ -1,3 +1,4 @@
+require "csv"
 require "xporter/version"
 require "xporter/column"
 
