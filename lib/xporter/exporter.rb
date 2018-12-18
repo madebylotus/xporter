@@ -14,11 +14,9 @@ module Xporter
     include Generator
     include Streaming
 
-    # class methods
-    class << self
-      def inherited(other) # reset so that each subclass has it's own collection
-        other._columns = []
-      end
+    # reset so that each subclass has it's own collection
+    def self.inherited(other)
+      other._columns = []
     end
   end
 end
