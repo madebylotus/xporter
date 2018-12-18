@@ -1,19 +1,17 @@
 require "xporter/exporter/dsl"
 require "xporter/exporter/settings"
+require "xporter/exporter/streaming"
 
 module Xporter
   class Exporter
     include Settings
     include DSL
+    include Streaming
 
     # class methods
     class << self
       def inherited(other) # reset so that each subclass has it's own collection
         other._columns = []
-      end
-
-      def stream(*args)
-        new.stream(*args)
       end
 
       def generate(*args)
@@ -30,16 +28,6 @@ module Xporter
         content.each do |row|
           csv << row
         end
-      end
-    end
-
-    def stream(collection, stream)
-      stream.write CSV.generate_line(headers)
-
-      @collection = collection
-
-      content.each do |row|
-        stream.write CSV.generate_line(row)
       end
     end
 
