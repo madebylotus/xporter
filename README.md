@@ -1,6 +1,7 @@
 # Xporter
 ruby gem for DSL creating streaming CSV exports.
 
+[ ![Codeship Status for madebylotus/xporter](https://app.codeship.com/projects/3f5726f0-e48f-0136-991e-763ab7b07a90/status?branch=master)](https://app.codeship.com/projects/319101)
 
 ## Installation
 
