@@ -6,7 +6,11 @@ require "active_support/concern"
 
 begin
   require 'byebug'
-rescue
+
+  # optional, will be used in decorators if available
+  require 'action_view'
+  require 'action_controller'
+rescue LoadError
 end
 
 require "xporter/version"

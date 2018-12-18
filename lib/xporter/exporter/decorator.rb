@@ -32,6 +32,8 @@ module Xporter
       private
 
       def view_context
+        return unless defined?(ActionView)
+
         @view_context ||= begin
           ActionView::Base.new(ActionController::Base.view_paths).tap do |view|
             view.class_eval do
@@ -48,10 +50,14 @@ module Xporter
 
       def decorate(record)
         if self.class._decorator_class.present?
-          self.class._decorator_class.new(record, view_context)
+          instantiate_decorated_object(self.class._decorator_class, record)
         else
           record.decorate(view_context)
         end
+      end
+
+      def instantiate_decorated_object(klass, record)
+        klass.new(record, view_context)
       end
     end
   end
