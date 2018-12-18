@@ -12,6 +12,10 @@ module Xporter
         self._columns = []
         self._batch_size = 500.freeze
       end
+
+      def columns
+        self.class._columns
+      end
     end
   end
 end

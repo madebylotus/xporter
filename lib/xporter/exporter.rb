@@ -40,7 +40,7 @@ module Xporter
     private
 
     def headers
-      self.class._columns.map do |column|
+      columns.map do |column|
         column.title_from(self.class._resource_class)
       end
     end
@@ -50,7 +50,7 @@ module Xporter
         record = transform(record) if transform?
         record = decorate(record) if decorator?
 
-        self.class._columns.map do |column|
+        columns.map do |column|
           column.data(record)
         end
       end
