@@ -92,4 +92,41 @@ RSpec.describe Xporter::Exporter do
       end
     end
   end
+
+  describe '.stream' do
+    subject { exporter }
+    let(:stream) { double(StringIO, write: nil) }
+
+    context 'simplest case' do
+      include_context 'simplest exporter'
+
+      it 'wrote the headers' do
+        headers = CSV.generate_line(['Name', 'Email'])
+
+        stream!
+
+        expect(stream).to have_received(:write).with(headers)
+      end
+
+      it 'included the first user' do
+        line = CSV.generate_line([justin_t.name, justin_t.email])
+
+        stream!
+
+        expect(stream).to have_received(:write).with(line)
+      end
+
+      it 'included the second user' do
+        line = CSV.generate_line([barack_o.name, barack_o.email])
+
+        stream!
+
+        expect(stream).to have_received(:write).with(line)
+      end
+    end
+
+    def stream!
+      subject.stream(collection, stream)
+    end
+  end
 end
