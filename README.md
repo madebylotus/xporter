@@ -20,8 +20,54 @@ Or install it yourself as:
     $ gem install xporter
 
 ## Usage
+In most cases, you'll use this library in a rails app, to organize different exporters and optionally use Live Streaming from the controller to browser to begin streaming results straight from the database to the client.
 
-TODO: Write usage instructions here
+### Define Exporter
+To define an exporter, simply place a file in the `app/exporters` directory in your rails app (restarting app server if creating directory for the first time).
+
+```ruby
+# app/exporters/admin_exporter.rb
+class AdminExporter < Xporter::Exporter
+  model User
+  decorates AdminDecorator
+
+  column(:name)
+  column(:email)
+  column(:dynamic) { |record| record.object_id }
+end
+```
+
+### Generate CSV String
+With an exporter defined, you'll want to convert a collection of objects into a CSV string.
+
+```ruby
+exporter = AdminExporter.new
+exporter.generate(User.all)
+# => "Name,Email,Dynamic\nJustin,justin@madebylotus.com,12345511\n"
+```
+
+If provided an `ActiveRecord::Relation`, we'll fetch records lazily in batches from ActiveRecord.
+
+### Stream CSV to Browser
+With an exporter defined, you'll want to convert a collection of objects and stream to the browser immediately.
+
+```ruby
+class AdministratorsController < ApplicationController
+  include Xporter::FileStreamer
+
+  def index
+    @users = User.all
+
+    respond_to do |format|
+      format.html
+      format.csv do
+        stream_file "administrators-export-#{ SecureRandom.uuid }".parameterize, 'csv' do |stream|
+          AdminExporter.stream(@users, stream)
+        end
+      end
+    end
+  end
+```
 
 ## Development
 
